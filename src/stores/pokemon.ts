@@ -92,6 +92,10 @@ export const usePokemonStore = defineStore('pokemon', {
       const responsePokemonList = await fetch(`${API_URL}/?limit=${take}&offset=${skip}`)
       const resultPokemonList = await responsePokemonList.json()
 
+      if (responsePokemonList.status !== 200) {
+        return { data: null, error: 'error' }
+      }
+
       const promises = resultPokemonList?.results?.map(async (pokemon: PokemonSpecies) => {
         const responsePokemonDetails = await fetch(`${pokemon.url}`)
         const resultPokemonDetails = await responsePokemonDetails.json()
@@ -120,8 +124,17 @@ export const usePokemonStore = defineStore('pokemon', {
         return { data: null, error: 'error' }
       }
 
-      this.selectedPokemon = resultPokemon
       return { data: resultPokemon, error: null }
+    },
+    async fetchPokemonDetails(id: number) {
+      const responsePokemonDetails = await fetch(`${API_URL}/${id}`)
+
+      if (responsePokemonDetails.status !== 200) {
+        return { data: null, error: 'error' }
+      }
+
+      const resultPokemonDetails = await responsePokemonDetails.json()
+      this.selectedPokemon = resultPokemonDetails
     }
   },
   getters: {}

@@ -12,7 +12,7 @@ import pokeball from '@/assets/pokeball.png'
     </div>
     <div class="flex justify-center items-center py-4 mt-5">
       <div>
-        <router-link to="/pokemon-list" class="flex flex-col items-center gap-1">
+        <router-link to="/pokemon" class="flex flex-col items-center gap-1">
           <img :src="pokeball" :class="'pokeball'" alt="pokeball" class="h-[50px] w-[50px]"
         /></router-link>
       </div>

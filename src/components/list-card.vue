@@ -3,18 +3,25 @@ import type { Pokemon } from '@/stores/pokemon'
 import findFirstTypeColor from '../utilities/pokemon-type-colors'
 import type { PropType } from 'vue'
 
+const emit = defineEmits(['openDetailsPage'])
+
 const props = defineProps({
   pokemonsList: {
     type: Array as PropType<Pokemon[]>,
     required: true
   }
 })
+
+const handleClick = (id: number) => {
+  emit('openDetailsPage', id)
+}
 </script>
 
 <template>
   <div class="grid grid-cols-2 gap-2 justify-between">
     <div
       v-for="(pokemon, i) in props.pokemonsList"
+      @click="handleClick(pokemon.id)"
       :key="i"
       :style="{ backgroundColor: findFirstTypeColor(pokemon.types) }"
       class="col-span-1 rounded-lg shadow-md text-white flex flex-col justify-between overflow-hidden"

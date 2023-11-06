@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
 import { usePokemonStore } from '@/stores/pokemon'
 import { storeToRefs } from 'pinia'
 import listCard from '@/components/list-card.vue'
 
+const instance = getCurrentInstance()
 const pokemonStore = usePokemonStore()
 const { pokemonsList } = storeToRefs(pokemonStore)
 
 onMounted(async () => {
   loading.value = true
+  pokemonsList.value = []
   await pokemonStore.fetchPokemonsList(10, 0)
   loading.value = false
   window.addEventListener('scroll', debounce(handleScroll, 500))
@@ -52,11 +54,28 @@ const searchPokemonByName = async () => {
   loading.value = true
   const result = await pokemonStore.searchPokemonByName(searchPokemon.value.toLowerCase())
   if (result.error) {
-    alert('There are no pokémon with that name. Please enter exact pokémon name.')
+    showErrorMessage('There are no pokémon with that name. Please enter exact pokémon name.')
   } else {
-    alert('Pokemon found!')
+    openDetailsPage(result.data.id)
   }
   loading.value = false
+}
+
+const openDetailsPage = (pokemonId: number) => {
+  instance?.proxy?.$router.push({ name: 'pokemon-details', params: { id: pokemonId } })
+}
+
+const showErrorMessageModal = ref(false)
+const errorMessage = ref('')
+const showErrorMessage = (message: string) => {
+  showErrorMessageModal.value = true
+  errorMessage.value = message
+  setTimeout(() => {
+    hideErrorMessageModal()
+  }, 3000)
+}
+const hideErrorMessageModal = () => {
+  showErrorMessageModal.value = false
 }
 </script>
 
@@ -81,8 +100,11 @@ const searchPokemonByName = async () => {
       </div>
     </div>
     <div class="my-5 font-semibold"><h2>Pokédex</h2></div>
-    <listCard :pokemonsList="pokemonsList" />
+    <listCard :pokemonsList="pokemonsList" @openDetailsPage="openDetailsPage" />
     <div v-if="loading" class="my-2 flex justify-center">Fetching pokémon...</div>
+    <div v-if="showErrorMessageModal" class="errorToast">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 
@@ -98,5 +120,18 @@ const searchPokemonByName = async () => {
   border: 1px solid gray;
   padding: 5px;
   border-radius: 5px;
+}
+
+.errorToast {
+  position: fixed;
+  bottom: 20px;
+  left: 20%;
+  right: 20%;
+  background-color: #333;
+  color: #fff;
+  padding: 15px;
+  font-size: 12px;
+  border-radius: 5px;
+  z-index: 999;
 }
 </style>
