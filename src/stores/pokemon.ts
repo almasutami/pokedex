@@ -107,6 +107,17 @@ export const usePokemonStore = defineStore('pokemon', {
       this.pokemonsList = this.pokemonsList.concat(newPokemonList)
 
       this.totalPokemons = resultPokemonList.count
+    },
+    async searchPokemonByName(query: string) {
+      const responsePokemon = await fetch(`${API_URL}/${query}`)
+      const resultPokemon = await responsePokemon.json()
+
+      if (resultPokemon.id) {
+        this.selectedPokemon = resultPokemon
+        return { data: resultPokemon, error: null }
+      } else {
+        return { data: null, error: 'error' }
+      }
     }
   },
   getters: {}

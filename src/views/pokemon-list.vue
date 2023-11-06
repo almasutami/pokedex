@@ -10,8 +10,8 @@ const { pokemonsList } = storeToRefs(pokemonStore)
 onMounted(async () => {
   loading.value = true
   await pokemonStore.fetchPokemonsList(10, 0)
-  window.addEventListener('scroll', debounce(handleScroll, 500))
   loading.value = false
+  window.addEventListener('scroll', debounce(handleScroll, 500))
 })
 
 onUnmounted(() => {
@@ -28,6 +28,7 @@ const lazyLoadPokemons = async () => {
 
 // Debounce function to limit the frequency of calls
 const debounce = (func: Function, delay: number) => {
+  loading.value = true
   let timeoutId: ReturnType<typeof setTimeout>
   return (...args: any[]) => {
     clearTimeout(timeoutId)
@@ -45,11 +46,24 @@ const handleScroll = () => {
     lazyLoadPokemons()
   }
 }
+
+const searchPokemon = ref('')
+const searchPokemonByName = async () => {
+  loading.value = true
+  const result = await pokemonStore.searchPokemonByName(searchPokemon.value.toLowerCase())
+  console.log(result)
+  if (result.error) {
+    alert('There are no pokemon with that name. Please enter exact name.')
+  } else {
+    alert('Pokemon found!')
+  }
+  loading.value = false
+}
 </script>
 
 <template>
   <div class="p-4 text-gray-700">
-    <div class="flex flex-row justify-between my-2">
+    <div class="flex flex-row justify-between my-2 items-center">
       <div>
         <router-link to="/">
           <font-awesome-icon
@@ -58,7 +72,14 @@ const handleScroll = () => {
           />
         </router-link>
       </div>
-      <div>searchbar</div>
+      <div class="flex flex-row items-center px-4">
+        <input
+          v-model="searchPokemon"
+          class="inputSearch"
+          @keydown.enter="searchPokemonByName"
+          placeholder="search by name..."
+        />
+      </div>
     </div>
     <div class="my-5 font-semibold"><h2>Pokédex</h2></div>
     <div class="grid grid-cols-2 gap-2 justify-between">
@@ -95,3 +116,18 @@ const handleScroll = () => {
     <div v-if="loading" class="my-2 flex justify-center">Fetching pokémon...</div>
   </div>
 </template>
+
+<style scoped>
+.inputSearch {
+  outline: none;
+  border: 1px solid gray;
+  padding: 5px;
+  border-radius: 5px;
+}
+.inputSearch:focus {
+  outline: none;
+  border: 1px solid gray;
+  padding: 5px;
+  border-radius: 5px;
+}
+</style>
