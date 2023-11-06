@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { usePokemonStore } from '@/stores/pokemon'
 import { storeToRefs } from 'pinia'
-import findFirstTypeColor from '../utilities/pokemon-type-colors'
+import listCard from '@/components/list-card.vue'
 
 const pokemonStore = usePokemonStore()
 const { pokemonsList } = storeToRefs(pokemonStore)
@@ -51,9 +51,8 @@ const searchPokemon = ref('')
 const searchPokemonByName = async () => {
   loading.value = true
   const result = await pokemonStore.searchPokemonByName(searchPokemon.value.toLowerCase())
-  console.log(result)
   if (result.error) {
-    alert('There are no pokemon with that name. Please enter exact name.')
+    alert('There are no pokémon with that name. Please enter exact pokémon name.')
   } else {
     alert('Pokemon found!')
   }
@@ -72,7 +71,7 @@ const searchPokemonByName = async () => {
           />
         </router-link>
       </div>
-      <div class="flex flex-row items-center px-4">
+      <div class="flex flex-col gap-1 px-4">
         <input
           v-model="searchPokemon"
           class="inputSearch"
@@ -82,37 +81,7 @@ const searchPokemonByName = async () => {
       </div>
     </div>
     <div class="my-5 font-semibold"><h2>Pokédex</h2></div>
-    <div class="grid grid-cols-2 gap-2 justify-between">
-      <div
-        v-for="(pokemon, i) in pokemonsList"
-        :key="i"
-        :style="{ backgroundColor: findFirstTypeColor(pokemon.types) }"
-        class="col-span-1 rounded-lg shadow-md text-white flex flex-col justify-between overflow-hidden"
-      >
-        <div class="font-bold text-lg px-4 pt-4">
-          {{ pokemon.name.slice(0, 1).toUpperCase() + pokemon.name.slice(1).toLowerCase() }}
-        </div>
-        <div>
-          <div class="flex flex-col justify-between gap-2 z-100 absolute p-4">
-            <span
-              v-for="(type, i) in pokemon.types"
-              :key="i"
-              :style="{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }"
-              class="px-2 py-1 rounded-lg text-xs"
-            >
-              {{ type.type.name.slice(0, 1).toUpperCase() + type.type.name.slice(1).toLowerCase() }}
-            </span>
-          </div>
-          <div class="flex flex-row justify-end">
-            <img
-              :src="pokemon.sprites.front_default"
-              :alt="pokemon.name"
-              class="h-[100px] w-auto"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <listCard :pokemonsList="pokemonsList" />
     <div v-if="loading" class="my-2 flex justify-center">Fetching pokémon...</div>
   </div>
 </template>

@@ -110,14 +110,18 @@ export const usePokemonStore = defineStore('pokemon', {
     },
     async searchPokemonByName(query: string) {
       const responsePokemon = await fetch(`${API_URL}/${query}`)
-      const resultPokemon = await responsePokemon.json()
 
-      if (resultPokemon.id) {
-        this.selectedPokemon = resultPokemon
-        return { data: resultPokemon, error: null }
-      } else {
+      if (responsePokemon.status !== 200) {
         return { data: null, error: 'error' }
       }
+
+      const resultPokemon = await responsePokemon.json()
+      if (!resultPokemon || !resultPokemon.id) {
+        return { data: null, error: 'error' }
+      }
+
+      this.selectedPokemon = resultPokemon
+      return { data: resultPokemon, error: null }
     }
   },
   getters: {}
