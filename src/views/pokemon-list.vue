@@ -21,7 +21,9 @@ onUnmounted(() => {
 const loading = ref(false)
 
 const lazyLoadPokemons = async () => {
+  loading.value = true
   await pokemonStore.fetchPokemonsList(10, pokemonsList.value.length)
+  loading.value = false
 }
 
 // Debounce function to limit the frequency of calls
@@ -35,7 +37,6 @@ const debounce = (func: Function, delay: number) => {
 
 // for infinite scroll
 const handleScroll = () => {
-  loading.value = true
   const scrollHeight = document.documentElement.scrollHeight
   const scrollTop = window.scrollY
   const clientHeight = window.innerHeight
@@ -43,14 +44,20 @@ const handleScroll = () => {
   if (scrollTop + clientHeight >= scrollHeight - 200) {
     lazyLoadPokemons()
   }
-  loading.value = false
 }
 </script>
 
 <template>
   <div class="p-4 text-gray-700">
     <div class="flex flex-row justify-between my-2">
-      <div>arrow</div>
+      <div>
+        <router-link to="/">
+          <font-awesome-icon
+            icon="fa-solid fa-arrow-left"
+            style="height: 17px; width: 17px; padding: 0"
+          />
+        </router-link>
+      </div>
       <div>searchbar</div>
     </div>
     <div class="my-5 font-semibold"><h2>Pokédex</h2></div>

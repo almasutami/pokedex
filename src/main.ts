@@ -5,13 +5,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faStar, faStarHalfStroke, faStarHalf } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import './assets/main.css'
 
 import LandingPage from '@/views/landing-page.vue'
 import PokemonListPage from '@/views/pokemon-list.vue'
 
-library.add(faStar, faStarHalfStroke, faStarHalf)
+library.add(faArrowLeft)
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', component: LandingPage },

@@ -89,7 +89,6 @@ export const usePokemonStore = defineStore('pokemon', {
   }),
   actions: {
     async fetchPokemonsList(take: number, skip: number) {
-      console.log('triggered')
       const responsePokemonList = await fetch(`${API_URL}/?limit=${take}&offset=${skip}`)
       const resultPokemonList = await responsePokemonList.json()
 
@@ -104,11 +103,8 @@ export const usePokemonStore = defineStore('pokemon', {
         return pokemonDetails
       })
 
-      // console.log(this.pokemonsList)
       const newPokemonList = await Promise.all(promises)
-      // console.log(newPokemonList)
       this.pokemonsList = this.pokemonsList.concat(newPokemonList)
-      // console.log(this.pokemonsList)
 
       this.totalPokemons = resultPokemonList.count
     }
