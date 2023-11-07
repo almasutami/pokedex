@@ -3,7 +3,6 @@ import { getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
 import { usePokemonStore } from '@/stores/pokemon'
 import { storeToRefs } from 'pinia'
 import listCard from '@/components/list-card.vue'
-import pikachu from '@/assets/pikachu.png'
 
 const instance = getCurrentInstance()
 const pokemonStore = usePokemonStore()
@@ -86,7 +85,7 @@ const hideErrorMessageModal = () => {
 </script>
 
 <template>
-  <div v-if="!loading" class="p-4 text-gray-700">
+  <div class="p-4 text-gray-700">
     <div class="flex flex-row justify-between my-2 items-center">
       <div>
         <router-link to="/">
@@ -110,10 +109,7 @@ const hideErrorMessageModal = () => {
     <div v-if="showErrorMessageModal" class="errorToast">
       {{ errorMessage }}
     </div>
-  </div>
-  <div v-if="loading" class="flex flex-col justify-center gap-2 h-[100vh] items-center">
-    Fetching pokémon...
-    <img :src="pikachu" alt="pikachu" class="w-[100vw]" />
+    <div v-if="loading" class="flex flex-row justify-center items-center">Fetching pokémon...</div>
   </div>
 </template>
 
