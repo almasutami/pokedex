@@ -83,8 +83,11 @@ onMounted(async () => {
 </script>
 <template>
   <div v-if="!loading" class="py-2 flex flex-col gap-2 justify-center items-center">
-    <div class="justify-center items-center flex flex-col">
-      <router-link :to="{ name: 'pokemon-details', params: { id: pokemonEvolutionArray?.id } }">
+    <div>
+      <router-link
+        class="justify-center items-center flex flex-col"
+        :to="{ name: 'pokemon-details', params: { id: pokemonEvolutionArray?.id } }"
+      >
         <img
           :src="pokemonEvolutionArray?.sprites?.front_default"
           :alt="pokemonEvolutionArray?.name"
