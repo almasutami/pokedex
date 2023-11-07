@@ -323,7 +323,13 @@ export const usePokemonStore = defineStore('pokemon', {
       })
 
       const newPokemonList = await Promise.all(promises)
-      this.pokemonsList = this.pokemonsList.concat(newPokemonList)
+
+      if (
+        newPokemonList[newPokemonList.length - 1]?.id !==
+        this.pokemonsList[this.pokemonsList.length - 1]?.id
+      ) {
+        this.pokemonsList = this.pokemonsList.concat(newPokemonList)
+      }
 
       this.totalPokemons = resultPokemonList.count
     },
