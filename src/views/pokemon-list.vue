@@ -130,7 +130,7 @@ const hideErrorMessageModal = () => {
 
 .errorToast {
   position: fixed;
-  bottom: 20px;
+  top: 60px;
   left: 20%;
   right: 20%;
   background-color: #333;

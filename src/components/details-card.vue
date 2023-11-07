@@ -3,6 +3,9 @@ import { usePokemonStore } from '@/stores/pokemon'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import aboutPage from '@/components/about-page.vue'
+import statsPage from '@/components/stats-page.vue'
+import evolutionPage from '@/components/evolution-page.vue'
+import movesPage from '@/components/moves-page.vue'
 
 const pokemonStore = usePokemonStore()
 const { selectedPokemon } = storeToRefs(pokemonStore)
@@ -79,7 +82,10 @@ const detailsPages = ref([
         />
       </div>
     </div>
-    <div class="bg-white p-4 h-[65vh] text-gray-500 rounded-t-2xl">
+    <div
+      class="bg-white p-4 h-[65vh] text-gray-500"
+      style="border-top-right-radius: 30px; border-top-left-radius: 30px"
+    >
       <div class="my-5 flex flex-row justify-between">
         <div
           v-for="(page, i) in detailsPages"
@@ -91,6 +97,9 @@ const detailsPages = ref([
         </div>
       </div>
       <aboutPage v-if="selectedDetailsPage === 0" />
+      <statsPage v-if="selectedDetailsPage === 1" />
+      <evolutionPage v-if="selectedDetailsPage === 2" />
+      <movesPage v-if="selectedDetailsPage === 3" />
     </div>
   </div>
 </template>
