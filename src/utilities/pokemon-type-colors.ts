@@ -23,7 +23,7 @@ import type { PokemonType } from '@/stores/pokemon'
 
 const findFirstTypeColor = (type: PokemonType[]) => {
   const firstType = type?.[0]?.type?.name
-  const color = colours[firstType] || '#777' // Default to black if the type is not found in colours
+  const color = colours[firstType] || '#777'
 
   return color
 }

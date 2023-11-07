@@ -2,10 +2,10 @@
 import { usePokemonStore } from '@/stores/pokemon'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import aboutPage from '@/components/about-page.vue'
-import statsPage from '@/components/stats-page.vue'
-import evolutionPage from '@/components/evolution-page.vue'
-import movesPage from '@/components/moves-page.vue'
+import aboutPage from '@/components/details-page/about-page.vue'
+import statsPage from '@/components/details-page/stats-page.vue'
+import evolutionPage from '@/components/details-page/evolution-page.vue'
+import movesPage from '@/components/details-page/moves-page.vue'
 
 const pokemonStore = usePokemonStore()
 const { selectedPokemon } = storeToRefs(pokemonStore)
@@ -60,7 +60,7 @@ const detailsPages = ref([
               : ''
           }}
         </div>
-        <div class="px-4 text-lg font-semibold">
+        <div class="px-4 text-lg font-bold" :style="{ 'letter-spacing': '3px' }">
           {{ displayPokemonId(selectedPokemon?.id?.toString() || '') }}
         </div>
       </div>

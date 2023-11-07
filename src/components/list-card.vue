@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Pokemon } from '@/stores/pokemon'
-import findFirstTypeColor from '../utilities/pokemon-type-colors'
+import findFirstTypeColor from '@/utilities/pokemon-type-colors'
 import type { PropType } from 'vue'
 
 const emit = defineEmits(['openDetailsPage'])

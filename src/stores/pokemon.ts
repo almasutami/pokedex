@@ -148,11 +148,82 @@ export interface PokemonType {
   }
 }
 
+export interface PokemonEvolutionChain {
+  id: number
+  baby_trigger_item: {
+    name: string
+    url: string
+  }
+  chain: PokemonChainLink
+}
+export interface PokemonEvolutionDetail {
+  item: {
+    name: string
+    url: string
+  }
+  trigger: {
+    name: string
+    url: string
+  }
+  gender: number
+  held_item: {
+    name: string
+    url: string
+  }
+  known_move: {
+    name: string
+    url: string
+  }
+  known_move_type: {
+    name: string
+    url: string
+  }
+  location: {
+    name: string
+    url: string
+  }
+  min_level: number
+  min_happiness: number
+  min_beauty: number
+  min_affection: number
+  needs_overworld_rain: boolean
+  party_species: {
+    name: string
+    url: string
+  }
+  party_type: {
+    name: string
+    url: string
+  }
+  relative_physical_stats: number
+  time_of_day: string
+  trade_species: {
+    name: string
+    url: string
+  }
+  turn_upside_down: boolean
+}
+export interface PokemonChainLink {
+  is_baby: boolean
+  species: {
+    name: string
+    url: string
+  }
+  evolution_details: PokemonEvolutionDetail[]
+  evolves_to: PokemonChainLink[]
+}
+
+export interface PokemonEvolutionTree extends Pokemon {
+  level: number
+  evolve_from?: PokemonEvolutionTree
+  evolve_to?: PokemonEvolutionTree[]
+}
 interface State {
   pokemonsList: Pokemon[]
   totalPokemons: number
   selectedPokemon: Pokemon | null
   selectedPokemonSpecies: PokemonSpecies | null
+  selectedPokemonEvolution: PokemonEvolutionChain | null
 }
 
 export const usePokemonStore = defineStore('pokemon', {
@@ -160,7 +231,8 @@ export const usePokemonStore = defineStore('pokemon', {
     pokemonsList: [],
     totalPokemons: 0,
     selectedPokemon: null,
-    selectedPokemonSpecies: null
+    selectedPokemonSpecies: null,
+    selectedPokemonEvolution: null
   }),
   actions: {
     async fetchPokemonsList(take: number, skip: number) {
@@ -220,6 +292,27 @@ export const usePokemonStore = defineStore('pokemon', {
 
       const resultPokemonSpecies = await responsePokemonSpecies.json()
       this.selectedPokemonSpecies = resultPokemonSpecies
+    },
+    async fetchPokemonEvolution(evolutionURL: string) {
+      const responsePokemonEvolution = await fetch(`${evolutionURL}`)
+
+      if (responsePokemonEvolution.status !== 200) {
+        return { data: null, error: 'error' }
+      }
+
+      const resultPokemonEvolution = await responsePokemonEvolution.json()
+      this.selectedPokemonEvolution = resultPokemonEvolution
+    },
+    async fetchPokemonDetailsForEvolution(pokemonURL: string) {
+      const changeUrl = pokemonURL.replace('pokemon-species', 'pokemon') as string
+      const responsePokemonDetails = await fetch(`${changeUrl}`)
+
+      if (responsePokemonDetails.status !== 200) {
+        return { data: null, error: 'error' }
+      }
+
+      const resultPokemonDetails = await responsePokemonDetails.json()
+      return { data: resultPokemonDetails, error: null }
     }
   },
   getters: {}

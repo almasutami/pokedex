@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 const props = defineProps(['label', 'value'])
 const pokemonStore = usePokemonStore()
 const { selectedPokemon } = storeToRefs(pokemonStore)
-import findFirstTypeColor from '../utilities/pokemon-type-colors'
+import findFirstTypeColor from '@/utilities/pokemon-type-colors'
 </script>
 
 <template>

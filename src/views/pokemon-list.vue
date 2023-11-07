@@ -28,7 +28,6 @@ const lazyLoadPokemons = async () => {
   loading.value = false
 }
 
-// Debounce function to limit the frequency of calls
 const debounce = (func: Function, delay: number) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
@@ -86,7 +85,7 @@ const hideErrorMessageModal = () => {
 </script>
 
 <template>
-  <div class="p-4 text-gray-700 fade">
+  <div class="p-4 text-gray-700">
     <div class="flex flex-row justify-between my-2 items-center">
       <div>
         <router-link to="/">

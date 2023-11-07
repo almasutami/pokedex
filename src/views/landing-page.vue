@@ -5,7 +5,7 @@ import pokeball from '@/assets/pokeball.png'
 
 <template>
   <div
-    class="fade bg-gradient-to-b from-white to-gray-100 h-[100vh] w-full p-4 flex flex-col gap-2 justify-between text-gray-700"
+    class="bg-gradient-to-b from-white to-gray-100 h-[100vh] w-full p-4 flex flex-col gap-2 justify-between text-gray-700"
   >
     <div class="flex justify-center items-center py-4 mt-5">
       <h1 :style="{ 'letter-spacing': '3px' }">POKÉDEX</h1>

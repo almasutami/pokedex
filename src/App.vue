@@ -4,22 +4,11 @@ import './assets/main.css'
 
 <template>
   <div id="app" class="max-w-[700px]">
-    <transition name="fade" mode="out-in">
-      <router-view />
-    </transition>
+    <router-view />
   </div>
 </template>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
 #app {
   margin: 0 auto;
 }

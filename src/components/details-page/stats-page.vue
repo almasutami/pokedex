@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import StatLineBar from '@/components/stat-line-bar.vue'
+import StatLineBar from '@/components/details-page/stat-line-bar.vue'
 import { usePokemonStore } from '@/stores/pokemon'
 import { storeToRefs } from 'pinia'
 
