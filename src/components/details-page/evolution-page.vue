@@ -84,17 +84,19 @@ onMounted(async () => {
 <template>
   <div v-if="!loading" class="py-2 flex flex-col gap-2 justify-center items-center">
     <div class="justify-center items-center flex flex-col">
-      <img
-        :src="pokemonEvolutionArray?.sprites?.front_default"
-        :alt="pokemonEvolutionArray?.name"
-        class="h-[100px] w-[100px]"
-      />
-      {{
-        pokemonEvolutionArray?.name
-          ? pokemonEvolutionArray?.name?.slice(0, 1).toUpperCase() +
-            pokemonEvolutionArray?.name?.slice(1)
-          : ''
-      }}
+      <router-link :to="{ name: 'pokemon-details', params: { id: pokemonEvolutionArray?.id } }">
+        <img
+          :src="pokemonEvolutionArray?.sprites?.front_default"
+          :alt="pokemonEvolutionArray?.name"
+          class="h-[100px] w-[100px]"
+        />
+        {{
+          pokemonEvolutionArray?.name
+            ? pokemonEvolutionArray?.name?.slice(0, 1).toUpperCase() +
+              pokemonEvolutionArray?.name?.slice(1)
+            : ''
+        }}</router-link
+      >
     </div>
     <evolutionTree
       v-if="pokemonEvolutionArray?.evolve_to && pokemonEvolutionArray?.evolve_to?.length > 0"

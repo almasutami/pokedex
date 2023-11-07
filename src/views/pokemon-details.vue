@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { usePokemonStore } from '@/stores/pokemon'
 import findFirstTypeColor from '@/utilities/pokemon-type-colors'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import detailsCard from '@/components/details-card.vue'
 import sadpikachu from '@/assets/sadpikachu.png'
 import pikachu from '@/assets/pikachu.png'
@@ -13,9 +13,7 @@ const { selectedPokemon, selectedPokemonSpecies } = storeToRefs(pokemonStore)
 const loading = ref(false)
 const error = ref(false)
 
-const pokemonId = useRoute().params.id as unknown as number
-
-onMounted(async () => {
+const fetchData = async (pokemonId: number) => {
   loading.value = true
   const result = await pokemonStore.fetchPokemonDetails(pokemonId)
   const resultSpecies = await pokemonStore.fetchSpecies(pokemonId)
@@ -26,6 +24,17 @@ onMounted(async () => {
     error.value = true
   }
   loading.value = false
+}
+
+onMounted(() => {
+  const initialPokemonId = useRoute().params.id as unknown as number
+  fetchData(initialPokemonId)
+})
+
+onBeforeRouteUpdate((to, from, next) => {
+  const newPokemonId = to.params.id as unknown as number
+  fetchData(newPokemonId)
+  next()
 })
 </script>
 
