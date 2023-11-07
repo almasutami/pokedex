@@ -3,6 +3,7 @@ import { usePokemonStore, type PokemonMove } from '@/stores/pokemon'
 import findFirstTypeColor from '@/utilities/pokemon-type-colors'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
+import pikachu from '@/assets/pikachu.png'
 
 const pokemonStore = usePokemonStore()
 const { selectedPokemon } = storeToRefs(pokemonStore)
@@ -13,18 +14,21 @@ const renderMoveName = (moveName: string) => {
 }
 
 const moves = ref<PokemonMove[]>([])
+const loading = ref(false)
 
 onMounted(async () => {
+  loading.value = true
   selectedPokemon?.value?.moves.forEach(async (move) => {
     const result = await pokemonStore.fetchPokemonMove(move?.move?.url || '')
     if (!result?.error) {
       moves.value.push(result?.data)
     }
   })
+  loading.value = false
 })
 </script>
 <template>
-  <div class="py-2 flex flex-col gap-4 px-2">
+  <div v-if="!loading" class="py-2 flex flex-col gap-4 px-2">
     <div
       v-for="(move, i) in moves"
       :key="i"
@@ -73,5 +77,9 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+  </div>
+  <div v-if="loading" class="flex flex-col justify-center gap-2 h-[100vh] items-center">
+    Fetching pokémon...
+    <img :src="pikachu" alt="pikachu" class="w-[100vw]" />
   </div>
 </template>

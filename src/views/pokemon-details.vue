@@ -6,6 +6,7 @@ import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import detailsCard from '@/components/details-card.vue'
 import sadpikachu from '@/assets/sadpikachu.png'
+import pikachu from '@/assets/pikachu.png'
 
 const pokemonStore = usePokemonStore()
 const { selectedPokemon, selectedPokemonSpecies } = storeToRefs(pokemonStore)
@@ -34,7 +35,7 @@ onMounted(async () => {
     :style="{
       backgroundColor: selectedPokemon?.types ? findFirstTypeColor(selectedPokemon?.types) : '#777'
     }"
-    v-if="!error"
+    v-if="!error && !loading"
   >
     <div class="px-4 flex flex-row justify-start my-2 items-center">
       <router-link to="/pokemon">
@@ -45,11 +46,13 @@ onMounted(async () => {
       </router-link>
     </div>
     <detailsCard />
-    <div v-if="loading" class="my-2 flex justify-center">Fetching pokémon...</div>
+  </div>
+  <div v-if="loading" class="flex flex-col justify-center gap-2 h-[100vh] items-center">
+    Fetching pokémon...
+    <img :src="pikachu" alt="pikachu" class="w-[100vw]" />
   </div>
   <div v-if="error" class="flex flex-col justify-center gap-2 h-[100vh] items-center">
     Error in fetching pokémon...
-
     <img :src="sadpikachu" alt="pikachu" class="w-[100vw]" />
   </div>
 </template>

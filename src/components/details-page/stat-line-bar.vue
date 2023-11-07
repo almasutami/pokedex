@@ -21,6 +21,7 @@ import findFirstTypeColor from '@/utilities/pokemon-type-colors'
               : '#777'
           }"
         ></div>
+        <div class="value-label">{{ props.value }}</div>
       </div>
     </div>
   </div>
@@ -28,6 +29,7 @@ import findFirstTypeColor from '@/utilities/pokemon-type-colors'
 
 <style scoped>
 .line-bar-container {
+  position: relative;
   width: 100%;
   height: 20px;
   background-color: #ddd;
@@ -38,5 +40,13 @@ import findFirstTypeColor from '@/utilities/pokemon-type-colors'
   height: 100%;
   background-color: #4caf50;
   border-radius: 5px;
+}
+
+.value-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
 }
 </style>

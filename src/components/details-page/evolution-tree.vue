@@ -26,7 +26,7 @@ const props = defineProps({
             :alt="pokemon?.name"
             class="h-[100px] w-[100px]"
           />
-          {{ pokemon?.name }}
+          {{ pokemon?.name.slice(0, 1).toUpperCase() + pokemon?.name.slice(1) }}
         </div>
         <evolutionTree
           v-if="pokemon?.evolve_to && pokemon?.evolve_to?.length > 0"
