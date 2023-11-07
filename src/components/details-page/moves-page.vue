@@ -1,77 +1,77 @@
 <script lang="ts" setup>
-import { usePokemonStore } from '@/stores/pokemon'
+import { usePokemonStore, type PokemonMove } from '@/stores/pokemon'
+import findFirstTypeColor from '@/utilities/pokemon-type-colors'
 import { storeToRefs } from 'pinia'
+import { onMounted, ref } from 'vue'
 
 const pokemonStore = usePokemonStore()
-const { selectedPokemon, selectedPokemonSpecies } = storeToRefs(pokemonStore)
+const { selectedPokemon } = storeToRefs(pokemonStore)
+
+const renderMoveName = (moveName: string) => {
+  const name = moveName.slice(0, 1).toUpperCase() + moveName.slice(1)
+  return name.split('-').join(' ')
+}
+
+const moves = ref<PokemonMove[]>([])
+
+onMounted(async () => {
+  selectedPokemon?.value?.moves.forEach(async (move) => {
+    const result = await pokemonStore.fetchPokemonMove(move?.move?.url || '')
+    if (!result?.error) {
+      moves.value.push(result?.data)
+    }
+  })
+})
 </script>
 <template>
   <div class="py-2 flex flex-col gap-4 px-2">
-    <div class="grid grid-cols-12 gap-2 overflow-auto">
-      <div class="col-span-4 font-semibold">Generation</div>
-      <div class="col-span-8">
-        {{ selectedPokemonSpecies?.generation?.name }}
+    <div
+      v-for="(move, i) in moves"
+      :key="i"
+      class="p-4 rounded-md text-white"
+      :style="{
+        backgroundColor: selectedPokemon?.types
+          ? findFirstTypeColor(selectedPokemon?.types)
+          : '#777'
+      }"
+    >
+      <div class="font-bold text-lg">{{ renderMoveName(move?.name) }}</div>
+      <div class="text-sm my-2" v-if="move?.effect_entries?.[0]?.effect">
+        <div v-if="move?.effect_entries?.[0]?.short_effect?.toString().includes('$effect_chance%')">
+          {{
+            move?.effect_entries?.[0]?.short_effect
+              ?.toString()
+              .replace('$effect_chance%', `${move?.effect_chance}%`)
+          }}
+        </div>
+        <div v-else>{{ move?.effect_entries?.[0]?.short_effect }}</div>
       </div>
-    </div>
-    <div class="grid grid-cols-12 gap-2 overflow-auto">
-      <div class="col-span-4 font-semibold">Height</div>
-      <div class="col-span-8">{{ selectedPokemon?.height }}</div>
-    </div>
-    <div class="grid grid-cols-12 gap-2 overflow-auto">
-      <div class="col-span-4 font-semibold">Weight</div>
-      <div class="col-span-8">{{ selectedPokemon?.height }}</div>
-    </div>
-    <div class="grid grid-cols-12 gap-2 overflow-auto">
-      <div class="col-span-4 font-semibold">Ability</div>
-      <div class="col-span-8">
-        <div v-if="selectedPokemon?.abilities?.length" class="w-full">
-          <span v-for="(ability, i) in selectedPokemon?.abilities" :key="i">
+      <div class="flex flex-col text-xs">
+        <div class="grid grid-cols-12" v-if="move?.power">
+          <div class="col-span-5 font-semibold">Power</div>
+          <div class="col-span-7">{{ move?.power }}</div>
+        </div>
+        <div class="grid grid-cols-12" v-if="move?.accuracy">
+          <div class="col-span-5 font-semibold">Accuracy</div>
+          <div class="col-span-7">{{ move?.accuracy }}%</div>
+        </div>
+        <div class="grid grid-cols-12" v-if="move?.damage_class">
+          <div class="col-span-5 font-semibold">Damage class</div>
+          <div class="col-span-7">
             {{
-              ability.ability.name.slice(0, 1).toUpperCase() +
-              ability.ability.name.slice(1).toLowerCase()
-            }}{{ i < selectedPokemon?.abilities?.length - 1 ? `,&nbsp;` : '' }}
-          </span>
+              move?.damage_class?.name.slice(0, 1).toUpperCase() + move?.damage_class?.name.slice(1)
+            }}
+          </div>
+        </div>
+        <div class="grid grid-cols-12" v-if="move?.contest_type?.name">
+          <div class="col-span-5 font-semibold">Contest type</div>
+          <div class="col-span-7">
+            {{
+              move?.contest_type?.name.slice(0, 1).toUpperCase() + move?.contest_type?.name.slice(1)
+            }}
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="grid grid-cols-12 gap-2 overflow-auto">
-      <div class="col-span-4 font-semibold">Capture rate</div>
-      <div class="col-span-8">{{ selectedPokemonSpecies?.capture_rate }}</div>
-    </div>
-
-    <div class="grid grid-cols-12 gap-2 overflow-auto">
-      <div class="col-span-4 font-semibold">Egg groups</div>
-      <div class="col-span-8">
-        <div class="flex flex-row" v-if="selectedPokemonSpecies?.egg_groups?.length">
-          <span v-for="(egg, i) in selectedPokemonSpecies?.egg_groups" :key="i">
-            {{ egg?.name?.slice(0, 1).toUpperCase() + egg?.name?.slice(1).toLowerCase()
-            }}{{ i < selectedPokemonSpecies?.egg_groups?.length - 1 ? `,&nbsp;` : '' }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-12 gap-2 overflow-auto">
-      <div class="col-span-4 font-semibold">Gender rate</div>
-      <div
-        class="col-span-8 flex flex-row gap-2 items-center"
-        v-if="selectedPokemonSpecies?.gender_rate && selectedPokemonSpecies?.gender_rate > 0"
-      >
-        <div class="flex flex-row gap-1 items-center">
-          <font-awesome-icon
-            icon="fa-solid fa-mars"
-            style="height: 17px; width: 17px; padding: 0; color: navy"
-          />{{ (1 - selectedPokemonSpecies?.gender_rate / 8) * 100 }} %
-        </div>
-        <div class="flex flex-row gap-1 items-center">
-          <font-awesome-icon
-            icon="fa-solid fa-venus"
-            style="height: 17px; width: 17px; padding: 0; color: pink"
-          />{{ (selectedPokemonSpecies?.gender_rate / 8) * 100 }}%
-        </div>
-      </div>
-      <div v-else class="col-span-8 flex flex-row gap-2 items-center">Genderless</div>
     </div>
   </div>
 </template>

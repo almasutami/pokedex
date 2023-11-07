@@ -72,7 +72,6 @@ const displayPokemonEvolution = async () => {
       })
     })
   })
-  console.log(pokemonEvolutionArray.value)
 }
 displayPokemonEvolution()
 </script>

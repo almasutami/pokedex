@@ -218,6 +218,74 @@ export interface PokemonEvolutionTree extends Pokemon {
   evolve_from?: PokemonEvolutionTree
   evolve_to?: PokemonEvolutionTree[]
 }
+
+//not exported yet cause not using these
+export interface ContestComboSets {}
+export interface VerboseEffect {
+  effect: string
+  short_effect: string
+  language: {
+    name: string
+    url: string
+  }
+}
+export interface AbilityEffectChange {}
+export interface MoveFlavorText {}
+export interface MachineVersionDetail {}
+export interface MoveMetaData {}
+export interface Name {}
+export interface PastMoveStatValues {}
+export interface MoveStatChange {}
+export interface PokemonMove {
+  id: number
+  name: string
+  accuracy: number
+  effect_chance: number
+  pp: number
+  priority: number
+  power: number
+  contest_combos: ContestComboSets
+  contest_type: {
+    name: string
+    url: string
+  }
+  contest_effect: {
+    name: string
+    url: string
+  }
+  damage_class: {
+    name: string
+    url: string
+  }
+  effect_entries: VerboseEffect[]
+  effect_changes: AbilityEffectChange[]
+  learned_by_pokemon: {
+    name: string
+    url: string
+  }[]
+  flavor_text_entries: MoveFlavorText[]
+  generation: {
+    name: string
+    url: string
+  }
+  machines: MachineVersionDetail[]
+  meta: MoveMetaData[]
+  names: Name[]
+  past_values: PastMoveStatValues[]
+  stat_changes: MoveStatChange[]
+  super_contest_effect: {
+    name: string
+    url: string
+  }
+  target: {
+    name: string
+    url: string
+  }
+  type: {
+    name: string
+    url: string
+  }
+}
 interface State {
   pokemonsList: Pokemon[]
   totalPokemons: number
@@ -313,6 +381,16 @@ export const usePokemonStore = defineStore('pokemon', {
 
       const resultPokemonDetails = await responsePokemonDetails.json()
       return { data: resultPokemonDetails, error: null }
+    },
+    async fetchPokemonMove(pokemonMoveURL: string) {
+      const responsePokemonMove = await fetch(`${pokemonMoveURL}`)
+
+      if (responsePokemonMove.status !== 200) {
+        return { data: null, error: 'error' }
+      }
+
+      const resultPokemonMove = await responsePokemonMove.json()
+      return { data: resultPokemonMove, error: null }
     }
   },
   getters: {}
