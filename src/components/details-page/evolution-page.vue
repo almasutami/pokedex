@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import evolutionTree from '@/components/details-page/evolution-tree.vue'
 import pikachu from '@/assets/pikachu.png'
+import correctImagePath from '@/utilities/correct-image-path'
 
 const pokemonStore = usePokemonStore()
 const { selectedPokemonEvolution } = storeToRefs(pokemonStore)
@@ -89,7 +90,7 @@ onMounted(async () => {
         :to="{ name: 'pokemon-details', params: { id: pokemonEvolutionArray?.id } }"
       >
         <img
-          :src="pokemonEvolutionArray?.sprites?.front_default"
+          :src="correctImagePath(pokemonEvolutionArray?.sprites.front_default || '')"
           :alt="pokemonEvolutionArray?.name"
           class="h-[100px] w-[100px]"
         />

@@ -2,6 +2,7 @@
 import { type PokemonEvolutionTree } from '@/stores/pokemon'
 import { type PropType } from 'vue'
 import evolutionTree from '@/components/details-page/evolution-tree.vue'
+import correctImagePath from '@/utilities/correct-image-path'
 
 const props = defineProps({
   evolveTo: {
@@ -25,7 +26,7 @@ const props = defineProps({
           :to="{ name: 'pokemon-details', params: { id: pokemon?.id } }"
         >
           <img
-            :src="pokemon?.sprites?.front_default"
+            :src="correctImagePath(pokemon?.sprites.front_default || '')"
             :alt="pokemon?.name"
             class="h-[100px] w-[100px]"
           />

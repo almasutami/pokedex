@@ -2,6 +2,7 @@
 import type { Pokemon } from '@/stores/pokemon'
 import findFirstTypeColor from '@/utilities/pokemon-type-colors'
 import type { PropType } from 'vue'
+import correctImagePath from '@/utilities/correct-image-path'
 
 const emit = defineEmits(['openDetailsPage'])
 
@@ -41,7 +42,11 @@ const handleClick = (id: number) => {
           </span>
         </div>
         <div class="flex flex-row justify-end">
-          <img :src="pokemon.sprites.front_default" :alt="pokemon.name" class="h-[100px] w-auto" />
+          <img
+            :src="correctImagePath(pokemon?.sprites.front_default || '')"
+            :alt="pokemon.name"
+            class="h-[100px] w-auto"
+          />
         </div>
       </div>
     </div>
